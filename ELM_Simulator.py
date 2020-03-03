@@ -37,39 +37,51 @@ if __name__ == '__main__':
             print(e)
             exit()
         
+        query = ''
+        
         while True:
             if connection.in_waiting:
-                query = connection.read_until(terminator='\r')
+                query += connection.read().decode("utf-8")
                 
-                if query.endswith('>'):
-                    query = query.split('>')[0]
+                if query[-1] == '\r':
+                    query = query[:-2]
                     
                     if query.startswith('AT '):
                         command = query.split('AT ')[1]
+                        connection.write(b'OK>\r')
+                        print('\tSent: OK')
                         
-                        print('Received command: '.format(command))
-                        
-                    elif len(query) >= 6:
-                        service = int(query[0:2], 16)
-                        pid     = int(query[2:],  16)
-                        
-                        if service == 1:
-                            if pid == 12:
-                                connection.write('410C0101>\r')
-                            elif pid == 13:
-                                connection.write('410D02>\r')
-                        
-                        elif service == 34:
-                            if pid == 4906:
-                                connection.write('62132A0303>\r')
-                            elif pid == 8434:
-                                connection.write('6220F200>\r')
-                            elif pid == 12345:
-                                connection.write('6230390505>\r')
-                            elif pid == 13162:
-                                connection.write('62336A06>\r')
-                else:
-                    print('Timeout')
+                    elif len(query) >= 4:
+                        try:
+                            service = int(query[0:2], 16)
+                            pid     = int(query[2:],  16)
+                            
+                            print('\nQuery: {}'.format(query))
+                            
+                            if service == 1:
+                                if pid == 12:
+                                    connection.write(b'410C0101>\r')
+                                    print('Sent: 410C0101\n')
+                                elif pid == 13:
+                                    connection.write(b'410D02>\r')
+                                    print('Sent: 410D02\n')
+                            
+                            elif service == 34:
+                                if pid == 4906:
+                                    connection.write(b'62132A0303>\r')
+                                    print('Sent: 62132A0303\n')
+                                elif pid == 8434:
+                                    connection.write(b'6220F200>\r')
+                                    print('Sent: 6220F200\n')
+                                elif pid == 12345:
+                                    connection.write(b'6230390505>\r')
+                                    print('Sent: 6230390505\n')
+                                elif pid == 13162:
+                                    connection.write(b'62336A06>\r')
+                                    print('Sent: 62336A06\n')
+                        except ValueError:
+                            print('**** Debug: {}'.format(query))
+                    query = ''
         
     except KeyboardInterrupt:
         try:
