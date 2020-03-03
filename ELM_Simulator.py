@@ -47,6 +47,7 @@ if __name__ == '__main__':
                     query = query[:-1]
                     
                     if query.startswith('AT '):
+                        print('\nCommand: {}'.format(query))
                         command = query.split('AT ')[1]
                         connection.write(b'OK>\r')
                         print('\tSent: OK')
