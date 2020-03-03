@@ -15,7 +15,7 @@ if __name__ == '__main__':
         port_found = False
         
         while not port_found:
-            port = input('Specify Arduino Serial Port: ')
+            port = 'COM17' #input('Specify Arduino Serial Port: ')
             
             for p in serial_ports():
                 if p == port or os.path.split(p)[-1] == port:
@@ -44,7 +44,7 @@ if __name__ == '__main__':
                 query += connection.read().decode("utf-8")
                 
                 if query[-1] == '\r':
-                    query = query[:-2]
+                    query = query[:-1]
                     
                     if query.startswith('AT '):
                         command = query.split('AT ')[1]
