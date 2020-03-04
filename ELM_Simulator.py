@@ -44,13 +44,13 @@ if __name__ == '__main__':
                 query += connection.read().decode("utf-8")
                 
                 if query[-1] == '\r':
-                    query = query[:-1]
+                    query = query[:-1].strip()
                     
                     if query.startswith('AT '):
                         print('\nCommand: {}'.format(query))
                         command = query.split('AT ')[1]
                         connection.write(b'OK>\r')
-                        print('\tSent: OK')
+                        print('Sent: OK')
                         
                     elif len(query) >= 4:
                         try:
