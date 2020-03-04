@@ -15,7 +15,7 @@ if __name__ == '__main__':
         port_found = False
         
         while not port_found:
-            port = 'COM17' #input('Specify Arduino Serial Port: ')
+            port = input('Specify Arduino Serial Port: ')
             
             for p in serial_ports():
                 if p == port or os.path.split(p)[-1] == port:
