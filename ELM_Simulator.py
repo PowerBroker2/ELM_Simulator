@@ -51,13 +51,19 @@ if __name__ == '__main__':
                         command = query.split('AT ')[1]
                         connection.write(b'OK>\r')
                         print('Sent: OK')
+                    
+                    if query.startswith('0100'):
+                        connection.write(b'4100FFFF>\r')
+                        print('Sent: 4100FFFF\n')
                         
                     elif len(query) >= 4:
                         try:
                             service = int(query[0:2], 16)
-                            pid     = int(query[2:],  16)
+                            pid     = int(query[2:-1],  16)
                             
                             print('\nQuery: {}'.format(query))
+                            print('Service: {}'.format(service))
+                            print('PID: {}'.format(pid))
                             
                             if service == 1:
                                 if pid == 12:
@@ -80,6 +86,9 @@ if __name__ == '__main__':
                                 elif pid == 13162:
                                     connection.write(b'62336A06>\r')
                                     print('Sent: 62336A06\n')
+                                elif pid == 16561:
+                                    connection.write(b'00B0:6240B10A14001:003F0183DC1400>\r')
+                                    print('Sent: 00B0:6240B10A14001:003F0183DC1400\n')
                         except ValueError:
                             print('**** Debug: {}'.format(query))
                     query = ''
